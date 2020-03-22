@@ -71,13 +71,13 @@ class PAHO_MQTT_Client(MQTT_Base):
         self.mqtt_client.on_message = self._on_message
         self.mqtt_client.on_disconnect = self._on_disconnect
 
-
-        if self.mqtt_settings["MQTT_USERNAME"]:
-            self.mqtt_client.set_auth_credentials(
-                self.mqtt_settings["MQTT_USERNAME"],
-                self.mqtt_settings["MQTT_PASSWORD"],
-            )
-
+        # Broken:
+        #if self.mqtt_settings["MQTT_USERNAME"]:
+        #    self.mqtt_client.set_auth_credentials(
+        #        self.mqtt_settings["MQTT_USERNAME"],
+        #        self.mqtt_settings["MQTT_PASSWORD"],
+        #    )   
+        
         def start():
             try:
                 logger.info ('Publisher loop')
