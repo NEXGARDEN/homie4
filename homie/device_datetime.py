@@ -13,7 +13,7 @@ class Device_DateTime(Device_Base):
         self, device_id=None, name=None, homie_settings=None, mqtt_settings=None
     ):
         super().__init__(device_id, name, homie_settings, mqtt_settings)
-
+        
         self.add_node(Node_DateTime(self, id="datetime", set_datetime=self.set_datetime))
 
         self.start()

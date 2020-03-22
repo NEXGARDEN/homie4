@@ -41,14 +41,16 @@ class Property_DateTime(Property_Base):
             meta,
         )
 
+    '''
     def validate_value(self, value):
         try:
-            date_time_obj = datetime.datetime.strptime(
+            date_time_obj = datetime.datetime.strftime(
                 date_time_str, "%Y-%m-%d %H:%M:%S.%f"
             )
             return True
         except:
             return False
+    '''
 
     def get_value_from_payload(self, payload):
         try:

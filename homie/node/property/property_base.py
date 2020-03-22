@@ -18,6 +18,7 @@ data_types = [
     "string",
     "enum",
     "color",
+    "datetime",
 ]
 
 """
