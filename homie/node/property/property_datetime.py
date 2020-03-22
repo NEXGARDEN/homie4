@@ -1,14 +1,18 @@
 from .property_base import Property_Base
-
+import logging
 import datetime
 
+tags = ["Time"]
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG)
 
 class Property_DateTime(Property_Base):
     def __init__(
         self,
         node,
-        id,
-        name,
+        id="datetime",
+        name="DateTime",
         settable=False,
         retained=True,
         qos=1,
@@ -17,7 +21,7 @@ class Property_DateTime(Property_Base):
         data_format=None,
         value=None,
         set_value=None,
-        tags=[],
+        tags=tags,
         meta={},
     ):
 
