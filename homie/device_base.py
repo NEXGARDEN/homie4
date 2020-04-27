@@ -97,7 +97,7 @@ class Device_Base(object):
 
         self.mqtt_subscription_handlers = {}
 
-        global devices 
+        global devices
         devices.append(self)
 
         #atexit.register(self.close)
@@ -193,9 +193,9 @@ class Device_Base(object):
         self.publish("/".join((self.topic, "$stats/uptime")),time.time()-self.start_time, retain, qos)
         self.publish("/".join((self.topic, "$stats/lastupdate")),datetime.now().strftime("%d/%m/%Y %H:%M:%S"), retain, qos)
 
-    def publish_homeassistant(self,hass_config,hass_payload):
-        self.publish(hass_config,hass_payload, True, 1)
-        
+    # def publish_homeassistant(self,hass_config,hass_payload):
+    #    self.publish(hass_config,hass_payload, True, 1)
+
     def add_subscription(self,topic,handler,qos=0): #subscription list to the required MQTT topics, used by properties to catch set topics
         self.mqtt_subscription_handlers [topic] = handler
         self.mqtt_client.subscribe (topic,qos)
@@ -277,7 +277,7 @@ class Device_Base(object):
                 self.publish_attributes()
                 self.publish_nodes()
                 self.subscribe_topics()
-                self.publish_homeassistant()
+                # self.publish_homeassistant()
                 if (
                     self.mqtt_client.using_shared_mqtt_client is False
                     or self.instance_number == 1
@@ -315,7 +315,7 @@ class Device_Base(object):
 
 def close_devices(*arg):
     logger.info ('Closing Devices')
-    global devices 
+    global devices
     for device in devices:
         device.close()
     logger.info ('Closed Devices')
@@ -326,4 +326,3 @@ def close_devices(*arg):
 
 #signal.signal(signal.SIGTERM, close_devices)
 #signal.signal(signal.SIGINT, close_devices)
-
