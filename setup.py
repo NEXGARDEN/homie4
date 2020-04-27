@@ -5,18 +5,18 @@ with open("README.md", "r") as fh:
 
 
 setuptools.setup(
-    name="Homie4",
+    name="Homie4 - Nex",
     version="0.3.3",
     description="Homie 4.0.0 Implementation",
-    author="Michael Cumming",
-    author_email="mike@4831.com",
+    author="Michael Cumming - Edited by RJRIII",
+    author_email="rromano@pdx.edu",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/mjcumming/homie4",
+    url="https://github.com/NEXGARDEN/homie4",
     keywords=["HOMIE", "MQTT"],
-    packages=setuptools.find_packages(exclude=("test",)),
+    packages=setuptools.find_packages(exclude=("test", "ARCHIVE",)),
     classifiers=[
-        "Development Status :: 5 - Production/Stable",
+        "Development Status :: 4 - Final Testing",
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
