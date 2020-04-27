@@ -97,7 +97,7 @@ class Device_Base(object):
 
         self.mqtt_subscription_handlers = {}
 
-        global devices
+        global devices 
         devices.append(self)
 
         #atexit.register(self.close)
@@ -170,7 +170,7 @@ class Device_Base(object):
             self.publish("/".join((self.topic, "$extensions")), extensions, retain, qos)
 
         if "stats" in self.extensions:
-            self.publish_statastics(retain, qos)
+            self.publish_statistics(retain, qos)
 
         if "firmware" in self.extensions:
             self.publish_firmware(retain, qos)
@@ -184,7 +184,7 @@ class Device_Base(object):
         self.publish("/".join((self.topic, "$fw/version")),self.homie_settings ['fw_version'], retain, qos)
         self.publish("/".join((self.topic, "$implementation")),self.homie_settings ['implementation'], retain, qos)
 
-    def publish_statastics(self, retain = True, qos = 1):
+    def publish_statistics(self, retain = True, qos = 1):
         self.publish("/".join((self.topic, "$stats/interval")),self.homie_settings ['update_interval'], retain, qos)
         self.publish("/".join((self.topic, "$stats/uptime")),time.time()-self.start_time, retain, qos)
         self.publish("/".join((self.topic, "$stats/lastupdate")),datetime.now().strftime("%d/%m/%Y %H:%M:%S"), retain, qos)
@@ -193,9 +193,9 @@ class Device_Base(object):
         self.publish("/".join((self.topic, "$stats/uptime")),time.time()-self.start_time, retain, qos)
         self.publish("/".join((self.topic, "$stats/lastupdate")),datetime.now().strftime("%d/%m/%Y %H:%M:%S"), retain, qos)
 
-    # def publish_homeassistant(self,hass_config,hass_payload):
-    #    self.publish(hass_config,hass_payload, True, 1)
-
+#    def publish_homeassistant(self,hass_config,hass_payload):
+#        self.publish(hass_config,hass_payload, True, 1)
+        
     def add_subscription(self,topic,handler,qos=0): #subscription list to the required MQTT topics, used by properties to catch set topics
         self.mqtt_subscription_handlers [topic] = handler
         self.mqtt_client.subscribe (topic,qos)
@@ -277,19 +277,7 @@ class Device_Base(object):
                 self.publish_attributes()
                 self.publish_nodes()
                 self.subscribe_topics()
-                # self.publish_homeassistant()
-                if (
-                    self.mqtt_client.using_shared_mqtt_client is False
-                    or self.instance_number == 1
-                ):  # only set last will if NOT using shared client or if using shared client and this is the first device instance
-                    self.mqtt_client.set_will(
-                        "/".join((self.topic, "$state")), "lost", retain=True, qos=1
-                    )
-                    logger.warning(
-                        "Device setting last will {}".format(
-                            "/".join((self.topic, "$state"))
-                        )
-                    )
+                #self.publish_homeassistant()
         else:
             self._mqtt_connected = False
 
@@ -315,7 +303,7 @@ class Device_Base(object):
 
 def close_devices(*arg):
     logger.info ('Closing Devices')
-    global devices
+    global devices 
     for device in devices:
         device.close()
     logger.info ('Closed Devices')
@@ -326,3 +314,4 @@ def close_devices(*arg):
 
 #signal.signal(signal.SIGTERM, close_devices)
 #signal.signal(signal.SIGINT, close_devices)
+

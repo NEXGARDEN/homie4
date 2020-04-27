@@ -28,8 +28,8 @@ COONNECTION_RESULT_CODES = {
 
 
 class PAHO_MQTT_Client(MQTT_Base):
-    def __init__(self, mqtt_settings):
-        MQTT_Base.__init__(self, mqtt_settings)
+    def __init__(self, mqtt_settings, last_will):
+        MQTT_Base.__init__(self, mqtt_settings, last_will)
 
         self.mqtt_client = None
 
@@ -45,6 +45,8 @@ class PAHO_MQTT_Client(MQTT_Base):
         self.mqtt_client.on_disconnect = self._on_disconnect
         #self.mqtt_client.enable_logger(mqtt_logger)
         #self.mqtt_client.enable_logger()
+
+        self.set_will(self.last_will,"lost",True,1)
 
         if self.mqtt_settings["MQTT_USERNAME"]:
             self.mqtt_client.username_pw_set(
@@ -64,25 +66,20 @@ class PAHO_MQTT_Client(MQTT_Base):
         except Exception as e:
             logger.warning("MQTT Unable to connect to Broker {}".format(e))
 
-
-        MQTT_Base.connect(self)
-
         self.mqtt_client.on_connect = self._on_connect
         self.mqtt_client.on_message = self._on_message
         self.mqtt_client.on_disconnect = self._on_disconnect
 
-        # Broken:
-        #if self.mqtt_settings["MQTT_USERNAME"]:
-        #    self.mqtt_client.set_auth_credentials(
-        #        self.mqtt_settings["MQTT_USERNAME"],
-        #        self.mqtt_settings["MQTT_PASSWORD"],
-        #    )   
-        
+        if self.mqtt_settings["MQTT_USERNAME"]:
+            self.mqtt_client.username_pw_set(
+                self.mqtt_settings["MQTT_USERNAME"],
+                password=self.mqtt_settings["MQTT_PASSWORD"],
+            )
+
         def start():
             try:
-                logger.info ('Publisher loop')
                 asyncio.set_event_loop(self.event_loop)
-                logger.info ('Looping forever')
+                logger.info ('Starting Asyincio looping forever')
                 self.event_loop.run_forever()
                 logger.warning ('Event loop stopped')
 
@@ -91,7 +88,7 @@ class PAHO_MQTT_Client(MQTT_Base):
 
         self.event_loop = asyncio.new_event_loop()
 
-        logger.warning("Starting MQTT publish thread")
+        logger.info("Starting MQTT publish thread")
         self._ws_thread = threading.Thread(target=start, args=())
 
         self._ws_thread.daemon = True
